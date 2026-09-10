@@ -43,15 +43,18 @@ Detection models (YOLO, transformers, whatever) are good at pattern-matching, ba
 - 💾 **Persistent, not just in-memory** — conversation state survives process restarts (SQLite-backed LangGraph checkpointing), and every incident is logged to a real database, not just printed to a console
 
 ## 🏗️ Architecture
-                ┌──────────────────────────────────────────────┐
-                │                Sentinel service                │
-                │                                                │
 
-Camera event ───▶ │ API layer ──▶ Agent core ──▶ Adapters │
-(any pipeline) │ (FastAPI) (LangGraph) (DB/notify) │
-│ │
-└──────────────────────────────────────────────┘
+```mermaid
+flowchart LR
+    CAM(["📹 Camera Pipeline<br/>(any source)"]) --> API
 
+    subgraph SENTINEL["🛡️ Sentinel Service"]
+        API["🌐 API Layer<br/>FastAPI"] --> AGENT["🧠 Agent Core<br/>LangGraph"]
+        AGENT <--> ADAPT["🔌 Adapters<br/>DB + Notifier"]
+    end
+
+    ADAPT --> ALERT(["🔔 Alert / Log"])
+```
 
 `source.py` and `notifiers.py` are the only pieces that know anything about the outside world. The agent core (`agent/graph.py`, `agent/tools.py`) never imports either directly — it receives them as injected dependencies. Swap a camera pipeline for a fraud-detection feed, or a console print for a Slack webhook, and the reasoning engine doesn't change by a single line.
 
