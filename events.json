@@ -1,0 +1,6 @@
+[
+  {"camera_id": 1, "event_type": "intrusion", "timestamp": "2026-09-06T02:15:00", "confidence": 0.88, "location": "main gate"},
+  {"camera_id": 3, "event_type": "loitering", "timestamp": "2026-09-06T23:47:00", "confidence": 0.81, "location": "loading dock"},
+  {"camera_id": 5, "event_type": "smoking_detected", "timestamp": "2026-09-06T10:05:00", "confidence": 0.76, "location": "parking lot"},
+  {"camera_id": 7, "event_type": "smoking_detected", "timestamp": "2026-09-06T14:12:00", "confidence": 0.94, "location": "stairwell B"}
+]

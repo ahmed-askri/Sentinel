@@ -1,0 +1,8 @@
+.env
+ff/
+__pycache__/
+*.pyc
+sentinel_checkpoints.db
+sentinel_incidents.db
+auto.crt
+auto.key
