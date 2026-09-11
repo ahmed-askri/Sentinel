@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from langchain_core.messages import HumanMessage
 from fastapi.staticfiles import StaticFiles
 from incident_db import list_recent_incidents
-
+import asyncio
 from config import NOTIFY_METHOD, WEBHOOK_URL
 from notifiers import build_notifier
 from agent.tools import build_tools
@@ -69,8 +69,7 @@ def extract_text(message) -> str:
 
 
 @app.post("/events")
-
-def receive_event(event: DetectionEvent):
+async def receive_event(event: DetectionEvent):
     prompt = (
         f"New detection event: camera {event.camera_id} flagged '{event.event_type}'"
         + (f" at {event.location}" if event.location else "")
@@ -78,7 +77,7 @@ def receive_event(event: DetectionEvent):
     )
     thread_id = f"camera-{event.camera_id}"
     config = {"configurable": {"thread_id": thread_id}}
-    result = sentinel_graph.invoke({"messages": [HumanMessage(content=prompt)]}, config)
+    result = await asyncio.to_thread(sentinel_graph.invoke, {"messages": [HumanMessage(content=prompt)]}, config)
     decision = determine_decision(result["messages"])
     incident_id = log_incident(event.camera_id, event.event_type, event.confidence, event.timestamp, decision)
     text = extract_text(result["messages"][-1]).strip()

@@ -3,7 +3,6 @@ from langgraph.prebuilt import ToolNode, tools_condition
 from langchain_groq import ChatGroq
 import sqlite3
 from langgraph.checkpoint.sqlite import SqliteSaver
-from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import SystemMessage
 
 MODEL_NAME = "openai/gpt-oss-20b"
