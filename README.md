@@ -22,14 +22,15 @@ Instead of alerting on every camera detection, Sentinel checks history, reasons 
 - [🔄 How It Works](#-how-it-works)
 - [✅ Validated Against a Real Pipeline](#-validated-against-a-real-pipeline)
 - ![Real YOLO detection firing on live video](demo/yolo_detection.png)
-- ![Sentinel's real reasoning, with a growing incident count proving genuine database memory](demo/agent_reasoning.png)
 - [🧠 Design Decisions](#-design-decisions)
 - [🚀 Getting Started](#-getting-started)
 - [📡 API Reference](#-api-reference)
 - [📁 Project Structure](#-project-structure)
+- [📸 See It In Action](#-see-it-in-action)
 - [🔮 What I'd Build Next](#-what-id-build-next)
 
 ---
+
 
 ## 🎯 The Problem
 
@@ -44,7 +45,8 @@ Detection models (YOLO, transformers, whatever) are good at pattern-matching, ba
 - 🔄 **Provider-agnostic by construction** — built against Claude, swapped to Gemini's free tier with a 2-line change, zero changes to the agent logic itself
 - 💾 **Persistent, not just in-memory** — conversation state survives process restarts (SQLite-backed LangGraph checkpointing), and every incident is logged to a real database, not just printed to a console
 - 🖥️ **Human review dashboard** — a lightweight web UI (`/ui`) shows recent incidents live and lets a human confirm or reject flagged ones with one click, writing directly back to the real database
-- ![Dashboard and API activity, including a real human-review flag](demo/review_activity.png)
+- ⚡ **Concurrent request handling** — verified with a timing test: two simultaneous detections both completed in ~4s each, not ~8s serially (see `test_concurrency.py`)
+
 
 ## 🏗️ Architecture
 
@@ -136,10 +138,20 @@ sentinel/
 ├── bridge.py # WebSocket bridge to a real CV pipeline
 └── main.py # Batch-mode test entry point
 
+## 📸 See It In Action
+
+**Real YOLO detection firing on live video:**
+![Real YOLO detection](demo/yolo_detection.png)
+
+**Sentinel's real reasoning — note the incident IDs climbing (14 → 15 → 16), proof this is a real, persistent database, not mock data:**
+![Agent reasoning with real history](demo/agent_reasoning.png)
+
+**The review dashboard and API activity, including a real human-review flag:**
+![Dashboard and review activity](demo/review_activity.png)
+
 
 ## 🔮 What I'd Build Next
 
-- ⚡ Async request handling (currently synchronous; blocks under concurrent cameras)
 - 🔐 API key authentication on `/events`
 - 🐳 Docker packaging for one-command deployment
 - 📊 A companion evaluation pipeline (in progress separately) to measure decision accuracy against a real scenario suite, not just eyeball correctness
