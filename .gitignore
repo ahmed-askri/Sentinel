@@ -6,3 +6,5 @@ sentinel_checkpoints.db
 sentinel_incidents.db
 auto.crt
 auto.key
+*.db-shm
+*.db-wal
