@@ -15,8 +15,6 @@ Instead of alerting on every camera detection, Sentinel checks history, reasons 
 
 ---
 
----
-
 ## 📋 Table of Contents
 - [🎯 The Problem](#-the-problem)
 - [⚙️ What Sentinel Does](#️-what-sentinel-does)
