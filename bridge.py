@@ -27,9 +27,10 @@ async def listen():
             }
             print(f"\n📹 {event['event_type']} on camera {event['camera_id']}")
             try:
-                r = requests.post(SENTINEL_URL, json=event, timeout=15)
+                r = requests.post(SENTINEL_URL, json=event, timeout=90)
                 r.raise_for_status()
-                print("🧠 Sentinel:", r.json()["decision"])
+                data = r.json()
+                print("🧠 Sentinel (raw):", data)
             except Exception as e:
                 print(f"⚠️ Sentinel call failed: {e}")
 

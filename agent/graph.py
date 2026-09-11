@@ -1,11 +1,12 @@
 from langgraph.graph import StateGraph, MessagesState, START, END
 from langgraph.prebuilt import ToolNode, tools_condition
+from langchain_groq import ChatGroq
 import sqlite3
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import SystemMessage
 
-MODEL_NAME = "gemini-2.5-flash"
+MODEL_NAME = "openai/gpt-oss-20b"
 
 SYSTEM_PROMPT = (
     "You are Sentinel, a security-monitoring reasoning agent. You receive "
@@ -22,7 +23,7 @@ SYSTEM_PROMPT = (
 )
 
 def build_graph(tools):
-    llm = ChatGoogleGenerativeAI(model=MODEL_NAME).bind_tools(tools)
+    llm = ChatGroq(model=MODEL_NAME).bind_tools(tools)
 
     def call_model(state: MessagesState):
         messages = state["messages"]

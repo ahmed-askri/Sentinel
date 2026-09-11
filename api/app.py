@@ -6,6 +6,8 @@ from typing import Optional
 from fastapi import FastAPI
 from pydantic import BaseModel
 from langchain_core.messages import HumanMessage
+from fastapi.staticfiles import StaticFiles
+from incident_db import list_recent_incidents
 
 from config import NOTIFY_METHOD, WEBHOOK_URL
 from notifiers import build_notifier
@@ -32,6 +34,10 @@ sentinel_graph = build_graph(tools)
 
 class ResolveRequest(BaseModel):
     was_real: bool
+
+@app.get("/incidents")
+def get_incidents():
+    return list_recent_incidents()
 
 @app.patch("/incidents/{incident_id}/resolve")
 def resolve(incident_id: int, body: ResolveRequest):
@@ -75,4 +81,8 @@ def receive_event(event: DetectionEvent):
     result = sentinel_graph.invoke({"messages": [HumanMessage(content=prompt)]}, config)
     decision = determine_decision(result["messages"])
     incident_id = log_incident(event.camera_id, event.event_type, event.confidence, event.timestamp, decision)
-    return {"camera_id": event.camera_id, "incident_id": incident_id, "decision": extract_text(result["messages"][-1])}
+    text = extract_text(result["messages"][-1]).strip()
+    if not text:
+        text = f"Decision: {decision} (model returned no explanatory text this time)"
+    return {"camera_id": event.camera_id, "incident_id": incident_id, "decision": text}
+app.mount("/ui", StaticFiles(directory="ui", html=True), name="ui")

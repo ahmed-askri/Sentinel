@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sentinel — Review Dashboard</title>
+<style>
+  :root { color-scheme: dark; }
+  body {
+    background: #0d1117; color: #e6edf3; font-family: -apple-system, Segoe UI, sans-serif;
+    margin: 0; padding: 32px;
+  }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  .sub { color: #8b949e; font-size: 13px; margin-bottom: 24px; }
+  .grid { display: grid; gap: 12px; max-width: 900px; }
+  .card {
+    background: #161b22; border: 1px solid #30363d; border-radius: 10px;
+    padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;
+    gap: 16px;
+  }
+  .info { display: flex; flex-direction: column; gap: 4px; }
+  .cam { font-weight: 600; font-size: 14px; }
+  .meta { color: #8b949e; font-size: 12px; }
+  .badge {
+    padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: .3px; white-space: nowrap;
+  }
+  .escalate { background: #4c1d1d; color: #ff6b6b; }
+  .human_review { background: #4a3b0f; color: #ffd764; }
+  .no_escalate { background: #12351f; color: #5bd88a; }
+  .confirmed_real { background: #611414; color: #ff9494; }
+  .confirmed_false { background: #21262d; color: #8b949e; }
+  .actions { display: flex; gap: 8px; }
+  button {
+    border: none; border-radius: 6px; padding: 6px 12px; font-size: 12px;
+    cursor: pointer; font-weight: 600;
+  }
+  .confirm { background: #21262d; color: #ff9494; }
+  .confirm:hover { background: #30363d; }
+  .reject { background: #21262d; color: #5bd88a; }
+  .reject:hover { background: #30363d; }
+  .empty { color: #8b949e; text-align: center; padding: 60px 0; }
+</style>
+</head>
+<body>
+  <h1>🛡️ Sentinel — Review Dashboard</h1>
+  <div class="sub">Human-in-the-loop incident review · auto-refreshes every 8s</div>
+  <div class="grid" id="grid"><div class="empty">Loading…</div></div>
+
+<script>
+async function load() {
+  const res = await fetch('/incidents');
+  const data = await res.json();
+  const grid = document.getElementById('grid');
+  if (!data.length) { grid.innerHTML = '<div class="empty">No incidents yet.</div>'; return; }
+
+  grid.innerHTML = data.map(row => {
+    const needsReview = row.decision === 'escalate' || row.decision === 'human_review';
+    return `
+      <div class="card">
+        <div class="info">
+          <div class="cam">📹 ${row.camera_id} — ${row.event_type}</div>
+          <div class="meta">Confidence ${row.confidence ?? 'n/a'} · ${row.event_timestamp ?? ''} · #${row.id}</div>
+        </div>
+        <span class="badge ${row.decision}">${row.decision.replace('_',' ')}</span>
+        ${needsReview ? `
+          <div class="actions">
+            <button class="confirm" onclick="resolve(${row.id}, true)">Confirm real</button>
+            <button class="reject" onclick="resolve(${row.id}, false)">False alarm</button>
+          </div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+async function resolve(id, wasReal) {
+  await fetch(`/incidents/${id}/resolve`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ was_real: wasReal })
+  });
+  load();
+}
+
+load();
+setInterval(load, 8000);
+</script>
+</body>
+</html>

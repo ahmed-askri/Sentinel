@@ -18,6 +18,15 @@ def init_db():
     conn.commit()
     conn.close()
 
+def list_recent_incidents(limit=50):
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    rows = conn.execute(
+        "SELECT * FROM incidents ORDER BY id DESC LIMIT ?", (limit,)
+    ).fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
+
 def log_incident(camera_id, event_type, confidence, event_timestamp, decision):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.execute(
