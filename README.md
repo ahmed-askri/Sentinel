@@ -41,6 +41,7 @@ Detection models (YOLO, transformers, whatever) are good at pattern-matching, ba
 - ⏱️ **Deduplicates in real time** — a cooldown window prevents one ongoing event from spamming a fresh LLM call and alert every few seconds
 - 🔄 **Provider-agnostic by construction** — built against Claude, swapped to Gemini's free tier with a 2-line change, zero changes to the agent logic itself
 - 💾 **Persistent, not just in-memory** — conversation state survives process restarts (SQLite-backed LangGraph checkpointing), and every incident is logged to a real database, not just printed to a console
+- 🖥️ **Human review dashboard** — a lightweight web UI (`/ui`) shows recent incidents live and lets a human confirm or reject flagged ones with one click, writing directly back to the real database
 
 ## 🏗️ Architecture
 
