@@ -21,6 +21,8 @@ Instead of alerting on every camera detection, Sentinel checks history, reasons 
 - [🏗️ Architecture](#️-architecture)
 - [🔄 How It Works](#-how-it-works)
 - [✅ Validated Against a Real Pipeline](#-validated-against-a-real-pipeline)
+- ![Real YOLO detection firing on live video](demo/yolo_detection.png)
+- ![Sentinel's real reasoning, with a growing incident count proving genuine database memory](demo/agent_reasoning.png)
 - [🧠 Design Decisions](#-design-decisions)
 - [🚀 Getting Started](#-getting-started)
 - [📡 API Reference](#-api-reference)
@@ -42,6 +44,7 @@ Detection models (YOLO, transformers, whatever) are good at pattern-matching, ba
 - 🔄 **Provider-agnostic by construction** — built against Claude, swapped to Gemini's free tier with a 2-line change, zero changes to the agent logic itself
 - 💾 **Persistent, not just in-memory** — conversation state survives process restarts (SQLite-backed LangGraph checkpointing), and every incident is logged to a real database, not just printed to a console
 - 🖥️ **Human review dashboard** — a lightweight web UI (`/ui`) shows recent incidents live and lets a human confirm or reject flagged ones with one click, writing directly back to the real database
+- ![Dashboard and API activity, including a real human-review flag](demo/review_activity.png)
 
 ## 🏗️ Architecture
 
