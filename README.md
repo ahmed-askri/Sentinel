@@ -12,16 +12,6 @@ Instead of alerting on every camera detection, Sentinel checks history, reasons 
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 ![Sentinel demo](demo/sentinel_run.png)
-## 📸 See It In Action
-
-**Real YOLO detection firing on live video:**
-![Real YOLO detection](demo/yolo_detection.png)
-
-**Sentinel's real reasoning — note the incident IDs climbing (14 → 15 → 16), proof this is a real, persistent database, not mock data:**
-![Agent reasoning with real history](demo/agent_reasoning.png)
-
-**The review dashboard and API activity, including a real human-review flag:**
-![Dashboard and review activity](demo/review_activity.png)
 
 ---
 
@@ -42,6 +32,7 @@ Instead of alerting on every camera detection, Sentinel checks history, reasons 
 - [🔮 What I'd Build Next](#-what-id-build-next)
 
 ---
+
 
 ## 🎯 The Problem
 
@@ -147,6 +138,17 @@ sentinel/
 ├── config.py # Env-driven configuration
 ├── bridge.py # WebSocket bridge to a real CV pipeline
 └── main.py # Batch-mode test entry point
+
+## 📸 See It In Action
+
+**Real YOLO detection firing on live video:**
+![Real YOLO detection](demo/yolo_detection.png)
+
+**Sentinel's real reasoning — note the incident IDs climbing (14 → 15 → 16), proof this is a real, persistent database, not mock data:**
+![Agent reasoning with real history](demo/agent_reasoning.png)
+
+**The review dashboard and API activity, including a real human-review flag:**
+![Dashboard and review activity](demo/review_activity.png)
 
 
 ## 🔮 What I'd Build Next
