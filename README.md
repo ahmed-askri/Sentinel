@@ -12,6 +12,18 @@ Instead of alerting on every camera detection, Sentinel checks history, reasons 
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 ![Sentinel demo](demo/sentinel_run.png)
+## 📸 See It In Action
+
+**Real YOLO detection firing on live video:**
+![Real YOLO detection](demo/yolo_detection.png)
+
+**Sentinel's real reasoning — note the incident IDs climbing (14 → 15 → 16), proof this is a real, persistent database, not mock data:**
+![Agent reasoning with real history](demo/agent_reasoning.png)
+
+**The review dashboard and API activity, including a real human-review flag:**
+![Dashboard and review activity](demo/review_activity.png)
+
+---
 
 ---
 
@@ -22,11 +34,11 @@ Instead of alerting on every camera detection, Sentinel checks history, reasons 
 - [🔄 How It Works](#-how-it-works)
 - [✅ Validated Against a Real Pipeline](#-validated-against-a-real-pipeline)
 - ![Real YOLO detection firing on live video](demo/yolo_detection.png)
-- ![Sentinel's real reasoning, with a growing incident count proving genuine database memory](demo/agent_reasoning.png)
 - [🧠 Design Decisions](#-design-decisions)
 - [🚀 Getting Started](#-getting-started)
 - [📡 API Reference](#-api-reference)
 - [📁 Project Structure](#-project-structure)
+- [📸 See It In Action](#-see-it-in-action)
 - [🔮 What I'd Build Next](#-what-id-build-next)
 
 ---
@@ -44,7 +56,7 @@ Detection models (YOLO, transformers, whatever) are good at pattern-matching, ba
 - 🔄 **Provider-agnostic by construction** — built against Claude, swapped to Gemini's free tier with a 2-line change, zero changes to the agent logic itself
 - 💾 **Persistent, not just in-memory** — conversation state survives process restarts (SQLite-backed LangGraph checkpointing), and every incident is logged to a real database, not just printed to a console
 - 🖥️ **Human review dashboard** — a lightweight web UI (`/ui`) shows recent incidents live and lets a human confirm or reject flagged ones with one click, writing directly back to the real database
-- ![Dashboard and API activity, including a real human-review flag](demo/review_activity.png)
+
 
 ## 🏗️ Architecture
 
