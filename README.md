@@ -45,6 +45,7 @@ Detection models (YOLO, transformers, whatever) are good at pattern-matching, ba
 - 🔄 **Provider-agnostic by construction** — built against Claude, swapped to Gemini's free tier with a 2-line change, zero changes to the agent logic itself
 - 💾 **Persistent, not just in-memory** — conversation state survives process restarts (SQLite-backed LangGraph checkpointing), and every incident is logged to a real database, not just printed to a console
 - 🖥️ **Human review dashboard** — a lightweight web UI (`/ui`) shows recent incidents live and lets a human confirm or reject flagged ones with one click, writing directly back to the real database
+- ⚡ **Concurrent request handling** — verified with a timing test: two simultaneous detections both completed in ~4s each, not ~8s serially (see `test_concurrency.py`)
 
 
 ## 🏗️ Architecture
@@ -151,7 +152,6 @@ sentinel/
 
 ## 🔮 What I'd Build Next
 
-- ⚡ Async request handling (currently synchronous; blocks under concurrent cameras)
 - 🔐 API key authentication on `/events`
 - 🐳 Docker packaging for one-command deployment
 - 📊 A companion evaluation pipeline (in progress separately) to measure decision accuracy against a real scenario suite, not just eyeball correctness
