@@ -3,18 +3,27 @@ Sentinel — API layer. Any camera pipeline
 POSTs detections here instead of Sentinel reading a file.
 """
 from typing import Optional
-from fastapi import FastAPI
+from fastapi import FastAPI, Header, HTTPException, Depends
 from pydantic import BaseModel
 from langchain_core.messages import HumanMessage
 from fastapi.staticfiles import StaticFiles
 from incident_db import list_recent_incidents
 import asyncio
-from config import NOTIFY_METHOD, WEBHOOK_URL
+from config import NOTIFY_METHOD, WEBHOOK_URL, SENTINEL_API_KEY
 from notifiers import build_notifier
 from agent.tools import build_tools
 from agent.graph import build_graph
 from incident_db import init_db, log_incident
+
 init_db()
+
+
+
+def verify_api_key(x_api_key: str = Header(...)):
+    if not SENTINEL_API_KEY:
+        return  # auth disabled if no key is configured
+    if x_api_key != SENTINEL_API_KEY:
+        raise HTTPException(status_code=401, detail="Invalid or missing API key")
 
 def determine_decision(messages) -> str:
     tool_names = set()
@@ -68,7 +77,7 @@ def extract_text(message) -> str:
     return str(content)
 
 
-@app.post("/events")
+@app.post("/events", dependencies=[Depends(verify_api_key)])
 async def receive_event(event: DetectionEvent):
     prompt = (
         f"New detection event: camera {event.camera_id} flagged '{event.event_type}'"

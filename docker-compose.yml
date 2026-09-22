@@ -1,0 +1,12 @@
+services:
+  sentinel:
+    build: .
+    container_name: sentinel
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
+    volumes:
+      - ./sentinel_checkpoints.db:/app/sentinel_checkpoints.db
+      - ./sentinel_incidents.db:/app/sentinel_incidents.db
+    restart: unless-stopped

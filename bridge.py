@@ -1,5 +1,9 @@
 import asyncio, websockets, json, requests, time
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
+SENTINEL_API_KEY = os.environ.get("SENTINEL_API_KEY", "")
 SAFESTATION_WS = "ws://localhost:8000/ws/alerts"
 SENTINEL_URL = "http://localhost:8001/events"
 COOLDOWN_SECONDS = 30  # ignore repeat alerts from the same camera+type within this window
@@ -27,7 +31,7 @@ async def listen():
             }
             print(f"\n📹 {event['event_type']} on camera {event['camera_id']}")
             try:
-                r = requests.post(SENTINEL_URL, json=event, timeout=90)
+                r = requests.post(SENTINEL_URL, json=event, timeout=90, headers={"X-API-Key": SENTINEL_API_KEY})
                 r.raise_for_status()
                 data = r.json()
                 print("🧠 Sentinel (raw):", data)
