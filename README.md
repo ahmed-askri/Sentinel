@@ -1,6 +1,7 @@
 # 🛡️ Sentinel
 
 **A pluggable agentic reasoning layer for video surveillance systems.**
+- 🐳 **Fully containerized** — one `docker compose up` builds and runs the whole service, dependencies included
 
 Instead of alerting on every camera detection, Sentinel checks history, reasons about context, and decides: escalate, log as false alarm, or flag for human review — with persistent memory of past decisions and a real feedback loop to correct itself over time.
 
@@ -149,7 +150,6 @@ sentinel/
 **The review dashboard and API activity, including a real human-review flag:**
 ![Dashboard and review activity](demo/review_activity.png)
 
-- 🐳 **Fully containerized** — one `docker compose up` builds and runs the whole service, dependencies included
   
 ## 🔮 What I'd Build Next
 - 📊 A companion evaluation pipeline (in progress separately) to measure decision accuracy against a real scenario suite, not just eyeball correctness
