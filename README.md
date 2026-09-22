@@ -149,11 +149,9 @@ sentinel/
 **The review dashboard and API activity, including a real human-review flag:**
 ![Dashboard and review activity](demo/review_activity.png)
 
-
+- 🐳 **Fully containerized** — one `docker compose up` builds and runs the whole service, dependencies included
+  
 ## 🔮 What I'd Build Next
-
-- 🔐 API key authentication on `/events`
-- 🐳 Docker packaging for one-command deployment
 - 📊 A companion evaluation pipeline (in progress separately) to measure decision accuracy against a real scenario suite, not just eyeball correctness
 
 ---
