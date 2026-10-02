@@ -2,6 +2,7 @@ from langgraph.graph import StateGraph, MessagesState, START, END
 from langgraph.prebuilt import ToolNode, tools_condition
 from langchain_groq import ChatGroq
 import sqlite3
+from langgraph.checkpoint.memory import MemorySaver
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langchain_core.messages import SystemMessage
 
@@ -21,7 +22,7 @@ SYSTEM_PROMPT = (
     "Explain your reasoning briefly."
 )
 
-def build_graph(tools):
+def build_graph(tools, checkpointer=None):
     llm = ChatGroq(model=MODEL_NAME).bind_tools(tools)
 
     def call_model(state: MessagesState):
@@ -38,7 +39,9 @@ def build_graph(tools):
     graph.add_conditional_edges("agent", tools_condition)
     graph.add_edge("tools", "agent")
 
-    conn = sqlite3.connect("sentinel_checkpoints.db", check_same_thread=False)
-    checkpointer = SqliteSaver(conn)
-    checkpointer.setup()
+    if checkpointer is None:
+        conn = sqlite3.connect("sentinel_checkpoints.db", check_same_thread=False)
+        checkpointer = SqliteSaver(conn)
+        checkpointer.setup()
+
     return graph.compile(checkpointer=checkpointer)
